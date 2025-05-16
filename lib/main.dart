@@ -41,136 +41,246 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[100],
-      body: Center(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-          child: Form(
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFF7F8571), Color(0xFF4A5433)],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Center(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+            child: Form(
               key: _formKey,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(Icons.login, size: 50, color: Color(0xFFF0BD4A)),
-                  SizedBox(height: 10),
+                  Container(
+                    padding: EdgeInsets.all(20),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Color(0xFFB5D966),
+                      borderRadius: BorderRadius.vertical(
+                        bottom: Radius.circular(20),
+                        top: Radius.circular(20),
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "Sign In Page",
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  SizedBox(height: 50),
+
                   Text(
-                    'Hello Again!',
+                    "LIBRARY",
                     style: GoogleFonts.poppins(
-                      fontSize: 28,
+                      color: Colors.white,
+                      letterSpacing: 20,
+                      fontSize: 50,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF7C4D1F),
                     ),
                   ),
-                  SizedBox(height: 10),
+
                   Text(
-                    'Login to your account',
+                    "SCHOOL",
                     style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      color: Colors.grey[600],
+                      color: Colors.white,
+                      letterSpacing: 20,
+                      fontSize: 50,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 30),
-                  TextFormField(
-                    controller: emailController,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.email),
-                      labelText: 'Input your email',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
 
+                  Text(
+                    "a place to borrow books",
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+
+                  SizedBox(height: 40),
+
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Color(0xFFAEBD9D),
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.3),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: TextFormField(
+                      controller: emailController,
+                      decoration: InputDecoration(
+                        hintText: "Input your email",
+                        hintStyle: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 16,
+                        ),
+                        labelText: "Email",
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 16,
+                        ),
+                        filled: true,
+                        fillColor: Color(0xFFCBD6BE),
+                        prefixIcon: Icon(Icons.person),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+
+                        errorStyle: TextStyle(
+                            fontSize: 12,
+                            height: 2,
+                            color: Colors.white
+                        ),
+                      ),
                       validator: (value) {
-                        if (value == null || value.isEmpty) return 'Email is required';
-                        if (!isValidEmail(value)) return 'Invalid email format';
+                        if (value == null || value.isEmpty) {
+                          return 'Email is required';
+                        }
+                        if (!isValidEmail(value)) {
+                          return 'Invalid email format';
+                        }
                         return null;
-                      }
-                  ),
-                  SizedBox(height: 15),
-
-                  TextFormField(
-                    controller: passwordController,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.lock),
-                      labelText: 'Input your password',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                      },
                     ),
+                  ),
 
+                  SizedBox(height: 20),
+
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Color(0xFFAEBD9D),
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.3),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: TextFormField(
                       obscureText: true,
+                      controller: passwordController,
+                      decoration: InputDecoration(
+                        hintText: "Create a password",
+                        hintStyle: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 16,
+                        ),
+                        labelText: "Password",
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 16,
+                        ),
+                        filled: true,
+                        fillColor: Color(0xFFCBD6BE),
+                        prefixIcon: Icon(Icons.password),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        errorStyle: TextStyle(
+                            fontSize: 12,
+                            height: 2,
+                            color: Colors.white
+                        ),
+                      ),
                       validator: (value) {
-                        if (value == null || value.isEmpty) return 'Password is required';
-                        if (!isValidPassword(value)) return 'Min 6 chars, include upper, lower, number & symbol';
-                        return null;
-                      }
+                        if (value == null || value.isEmpty){
+                          return 'Password is required';
+                        }else if(!isValidPassword(value)){
+                          return 'Invalid password format';
+                        }else{
+                          return null;
+                        }
+                      },
+                    ),
                   ),
-                  SizedBox(height: 26),
-                  
+
+                  SizedBox(height: 20),
+
                   SizedBox(
                     width: double.infinity,
                     child: CustomButton(
-                        text: 'Login',
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            var status = LoginLogic.submit(
-                              email: emailController.text,
-                              password: passwordController.text,
-                            );
-
-                            if (await status){
-                              await Fluttertoast.showToast(
-                                  msg: 'Success login',
-                                  toastLength: Toast.LENGTH_LONG,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: Color(0xFF7C4D1F),
-                                  textColor: Colors.white,
-                                  fontSize: 16.0
-                              );
-
-                              if (!mounted) return;
-
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => HomePage())
-                              );
-                            } else {
-                              await Fluttertoast.showToast(
-                                  msg: 'Failed login',
-                                  toastLength: Toast.LENGTH_LONG,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: Color(0xFF7C4D1F),
-                                  textColor: Colors.white,
-                                  fontSize: 16.0
-                              );
-                            }
+                      text: "Login",
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          var status = LoginLogic.submit(
+                            email: emailController.text,
+                            password: passwordController.text,
+                          );
                         }
-                      }
+                      },
                     ),
                   ),
-                  SizedBox(height: 15),
 
-                  Center(
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.push(
+                  SizedBox(height: 10),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "You don't have account?",
+                        style: GoogleFonts.poppins(color: Colors.white),
+                      ),
+
+                      SizedBox(width: 4),
+
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => RegisterPage()));
-                      },
-                      child: Text(
-                        'Don\'t have an account? Register',
-                        style: GoogleFonts.poppins(
-                          fontSize: 13,
-                          color: Colors.grey[700],
+                              builder: (context) => RegisterPage(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "Sign Up",
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
                 ],
-              )
+              ),
+            ),
           ),
         ),
       ),
