@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:libraryschool_aplication/screens/book_screens/setting_screen.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -9,13 +10,14 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        backgroundColor: Colors.amber[700],
+        backgroundColor: Color(0xFFB5D966),
         elevation: 0,
         title: Text(
-          'Go-LibrarySchool',
+          "Go-LibrarySchool",
           style: GoogleFonts.poppins(
+            fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: Colors.grey[800],
           ),
         ),
         centerTitle: true,
@@ -66,10 +68,12 @@ class HomePage extends StatelessWidget {
                       icon: Icons.settings,
                       title: 'Settings',
                       color: Colors.purple,
-                      onTap: () {}),
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => SettingPage()));
+                      }),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),

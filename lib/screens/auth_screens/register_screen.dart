@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:libraryschool_aplication/core/constants/const_colors.dart';
 import 'package:libraryschool_aplication/main.dart';
 import 'package:libraryschool_aplication/widgets/custom_button.dart';
+import 'package:libraryschool_aplication/widgets/custom_field.dart';
 
 import '../../helpers/validation/email_validation.dart';
 import '../../helpers/validation/password_validation.dart';
@@ -46,6 +47,14 @@ class _RegisterPageState extends State<RegisterPage> {
                     padding: EdgeInsets.all(20),
                     width: double.infinity,
                     decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.3),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: Offset(0, 3),
+                        )
+                      ],
                       color: Color(0xFFB5D966),
                       borderRadius: BorderRadius.vertical(
                         bottom: Radius.circular(20),
@@ -67,91 +76,47 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
 
-                  SizedBox(height: 50),
-
-                  Text(
-                    "LIBRARY",
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      letterSpacing: 20,
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-
-                  Text(
-                    "SCHOOL",
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      letterSpacing: 20,
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-
-                  Text(
-                    "a place to borrow books",
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-
-                  SizedBox(height: 40),
+                  SizedBox(height: 20),
 
                   Container(
-                    decoration: BoxDecoration(
-                      color: Color(0xFFAEBD9D),
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: Offset(0, 3),
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          "LIBRARY",
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            letterSpacing: 16,
+                            fontSize: 46,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        Text(
+                          "SCHOOL",
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            letterSpacing: 16,
+                            fontSize: 46,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        Text(
+                          "a place to borrow books",
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal,
+                          ),
                         ),
                       ],
                     ),
-                    child: TextFormField(
-                      obscureText: true,
-                      controller: passController,
-                      decoration: InputDecoration(
-                        hintText: "Create a username",
-                        hintStyle: TextStyle(
-                          color: Colors.black54,
-                          fontSize: 16,
-                        ),
-                        labelText: "Username",
-                        labelStyle: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 16,
-                        ),
-                        filled: true,
-                        fillColor: Color(0xFFCBD6BE),
-                        prefixIcon: Icon(Icons.password),
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 14,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                        errorStyle: TextStyle(
-                          fontSize: 12,
-                          height: 2,
-                          color: Colors.white,
-                        ),
-                      ),
-
-                      validator:
-                          (value) =>
-                              value == null || value.isEmpty
-                                  ? 'Username is required'
-                                  : null,
-                    ),
                   ),
+
+                  SizedBox(height: 20),
+
+                  FieldInput(controller: usernameController, icon: Icons.person, labelText: "Username", hintText: "Create a username", nullField: "Username is required"),
 
                   SizedBox(height: 10),
 
