@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:libraryschool_aplication/screens/home_screen.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -55,7 +56,9 @@ class _SettingPageState extends State<SettingPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                     icon: FaIcon(
                       FontAwesomeIcons.angleLeft,
                       size: 36,
@@ -232,9 +235,9 @@ class _SettingPageState extends State<SettingPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              _buildNavItem(Icons.book, "Book"),
-              _buildNavItem(Icons.home_filled, "Home"),
-              _buildNavItem(Icons.person, "Profile"),
+              _buildNavItem(Icons.book, "Book", context),
+              _buildNavItem(Icons.home_filled, "Home", context),
+              _buildNavItem(Icons.person, "Profile", context),
             ],
           ),
         ),
@@ -355,20 +358,33 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget _buildNavItem(IconData icon, String label) {
+  Widget _buildNavItem(IconData icon, String label, BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Icon(icon, color: Color(0xFF7F8571), size: 36),
-        SizedBox(height: 4),
-        Text(
-          label,
-          style: GoogleFonts.poppins(
-            fontSize: 14,
-            color: Color(0xFF4A5433),
-            fontWeight: FontWeight.w500,
+        GestureDetector(
+          onTap: () {
+            if (label == "Profile") {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SettingPage()));
+            }else if (label == "Home"){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+            }
+          },
+          child: Column(
+            children: <Widget>[
+              Icon(icon, color: Color(0xFF7F8571), size: 36),
+              SizedBox(height: 4),
+              Text(
+                label,
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Color(0xFF4A5433),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
           ),
-        ),
+        )
       ],
     );
   }
