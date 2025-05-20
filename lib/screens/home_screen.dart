@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:libraryschool_aplication/screens/book_screens/book_screen.dart';
 import 'package:libraryschool_aplication/screens/book_screens/setting_screen.dart';
 
 class HomePage extends StatelessWidget {
@@ -8,153 +9,161 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFF7F8571), Color(0xFF4A5433)],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFFF5F7FA), Color(0xFFE4E8F0)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              _buildAppBar(context),
+              _buildWelcomeSection(),
+              _buildMenuGrid(context),
+            ],
+          ),
         ),
       ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(80),
-          child: Container(
-            height: 100,
-            decoration: BoxDecoration(
-              color: Color(0xFFD9D9D9),
-              borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
-            ),
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-            child: Container(
-              margin: EdgeInsets.only(top: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      color: Color(0xFFD9D9D9),
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Color(0xFFCBD6BE),
-                        width: 4,
-                      ),
-                    ),
-                    child: ClipOval(
-                      child: Image.network(
-                        'https://i.pinimg.com/474x/6c/70/8a/6c708a78bfe268ed1e9af5720f952cd2.jpg',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 8),
-                    child: Text(
-                      "Home Page",
-                      style: GoogleFonts.poppins(
-                        color: Color(0xFF4A5433),
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.settings),
-                    iconSize: 36,
-                    color: Color(0xFF4A5433),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      'Welcome back!',
-                      style: GoogleFonts.poppins(
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFFD9D9D9),
-                      ),
-                    ),
-                    SizedBox(height: 6),
-                    Text(
-                      'Explore the features of your digital library.',
-                      style: GoogleFonts.poppins(fontSize: 14, color: Color(0xFFD9D9D9)),
-                    ),
-                    SizedBox(height: 20),
-                  ],
-                ),
-              ),
+      bottomNavigationBar: _buildBottomNavBar(context),
+    );
+  }
 
-              // Card Grid Menu
-              Expanded(
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                  children: [
-                    _buildMenuCard(
-                        icon: Icons.book,
-                        title: 'Catalog',
-                        color: Colors.blue,
-                        onTap: () {}),
-                    _buildMenuCard(
-                        icon: Icons.bookmark,
-                        title: 'My Books',
-                        color: Colors.green,
-                        onTap: () {}),
-                    _buildMenuCard(
-                        icon: Icons.history,
-                        title: 'History',
-                        color: Colors.black26,
-                        onTap: () {}),
-                    _buildMenuCard(
-                        icon: Icons.settings,
-                        title: 'Settings',
-                        color: Colors.purple,
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => SettingPage()));
-                        }),
-                  ],
+  Widget _buildAppBar(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            height: 50,
+            width: 50,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(25),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 1,
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
                 ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(25),
+              child: Image.network(
+                'https://i.pinimg.com/474x/6c/70/8a/6c708a78bfe268ed1e9af5720f952cd2.jpg',
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => const Icon(Icons.person, color: Color(0xFF4A5433)),
               ),
-            ],
+            ),
           ),
-        ),
-        bottomNavigationBar: Container(
-          height: 76,
-          decoration: BoxDecoration(
-            color: Color(0xFFD9D9D9),
-            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 10,
-                spreadRadius: 2,
-              )
-            ],
+          // Page title
+          Text(
+            "Home",
+            style: GoogleFonts.poppins(
+              color: const Color(0xFF4A5433),
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              _buildNavItem(Icons.book, "Book", context),
-              _buildNavItem(Icons.home_filled, "Home",context),
-              _buildNavItem(Icons.person, "Profile",context),
-            ],
+
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingPage()),
+              );
+            },
+            icon: Container(
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              child: const Icon(
+                Icons.settings_outlined,
+                size: 24,
+                color: Color(0xFF4A5433),
+              ),
+            ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWelcomeSection() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+      child: Column(
+        children: [
+          Text(
+            'Welcome back!',
+            style: GoogleFonts.poppins(
+              fontSize: 26,
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFF4A5433),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Explore the features of your digital library',
+            style: GoogleFonts.poppins(
+              fontSize: 14,
+              color: Colors.grey.shade600,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMenuGrid(BuildContext context) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: GridView.count(
+          crossAxisCount: 2,
+          mainAxisSpacing: 16,
+          crossAxisSpacing: 16,
+          children: [
+            _buildMenuCard(
+              icon: FontAwesomeIcons.bookOpen,
+              title: 'Catalog',
+              color: const Color(0xFF4A5433),
+              onTap: () {},
+            ),
+            _buildMenuCard(
+              icon: FontAwesomeIcons.bookBookmark,
+              title: 'My Books',
+              color: const Color(0xFF7F8571),
+              onTap: () {},
+            ),
+            _buildMenuCard(
+              icon: FontAwesomeIcons.clockRotateLeft,
+              title: 'History',
+              color: const Color(0xFF4A5433),
+              onTap: () {},
+            ),
+            _buildMenuCard(
+              icon: Icons.settings_outlined,
+              title: 'Settings',
+              color: const Color(0xFF7F8571),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SettingPage()),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );
@@ -170,32 +179,39 @@ class HomePage extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: Color(0xFFCBD6BE),
-          borderRadius: BorderRadius.circular(16),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16.0),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 10,
-              blurStyle: BlurStyle.outer,
-              offset: Offset(2, 2),
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
-        padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircleAvatar(
-              backgroundColor: color.withOpacity(0.1),
-              child: Icon(icon, color: color, size: 30,),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                size: 28,
+                color: color,
+              ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Text(
               title,
               style: GoogleFonts.poppins(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: Colors.grey[800],
+                color: const Color(0xFF4A5433),
               ),
             ),
           ],
@@ -204,35 +220,63 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildNavItem(IconData icon, String label, BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        GestureDetector(
-          onTap: () {
-            if (label == "Profile") {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SettingPage()));
-            }else if (label == "Home"){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
-            }
-          },
-          child: Column(
-            children: <Widget>[
-              Icon(icon, color: Color(0xFF7F8571), size: 36),
-              SizedBox(height: 4),
-              Text(
-                label,
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: Color(0xFF4A5433),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
+  Widget _buildBottomNavBar(BuildContext context) {
+    return Container(
+      height: 80,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 10,
+            offset: const Offset(0, -2),
           ),
-        )
-      ],
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _buildNavItem(FontAwesomeIcons.book, "Books", context),
+          _buildNavItem(Icons.home, "Home", context, isActive: true),
+          _buildNavItem(Icons.person, "Profile", context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNavItem(IconData icon, String label, BuildContext context, {bool isActive = false}) {
+    return GestureDetector(
+      onTap: () {
+        if (label == "Profile") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const SettingPage()),
+          );
+        } else if (label == "Books") {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => BookListPage()));
+        }
+      },
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            size: 28,
+            color: isActive ? const Color(0xFF4A5433) : Colors.grey.shade600,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: GoogleFonts.poppins(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: isActive ? const Color(0xFF4A5433) : Colors.grey.shade600,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
-

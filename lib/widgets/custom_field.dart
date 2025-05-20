@@ -11,7 +11,7 @@ class FieldInput extends StatelessWidget {
     required this.labelText,
     required this.hintText,
     required this.nullField,
-    this.formatError,
+    this.formatError, required bool obscureText, required String? Function(dynamic value) validator,
   });
 
   final TextEditingController controller;

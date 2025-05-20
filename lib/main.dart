@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:libraryschool_aplication/screens/auth_screens/register_screen.dart';
 import 'package:libraryschool_aplication/screens/home_screen.dart';
-import 'package:libraryschool_aplication/widgets/custom_button.dart';
-import 'package:libraryschool_aplication/widgets/custom_field.dart';
-import 'helpers/validation/email_validation.dart';
-import 'helpers/validation/password_validation.dart';
 import 'logic/authentication/login_logic.dart';
+import 'logic/authentication/register_logic.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -19,15 +17,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Library School',
-      theme: ThemeData(
-        primarySwatch: Colors.amber
-      ),
+      theme: ThemeData(primarySwatch: Colors.amber),
       home: LoginPage(),
     );
   }
 }
 
-class LoginPage extends StatefulWidget{
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
@@ -39,162 +35,119 @@ class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  bool isLoading = false;
+
+  Future<void> _handleLogin() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() => isLoading = true);
+
+      bool result = await LoginLogic.submit(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+
+      setState(() => isLoading = false);
+
+      if (result) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Login failed! Incorrect email or password.'),
+            backgroundColor: Colors.red[800],
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFF7F8571), Color(0xFF4A5433)],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Center(
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F7FA),
+      body: SafeArea(
+        child: Center(
           child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Form(
               key: _formKey,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
-                          spreadRadius: 2, // Seberapa jauh bayangan menyebar dari container
-                          blurRadius: 5, // Tingkat keburaman bayangan,
-                          offset: Offset(0, 3), // Posisi bayangan secara horizontal dan vertikal
-                        )
-                      ],
-                      color: Color(0xFFB5D966),
-                      borderRadius: BorderRadius.vertical(
-                        bottom: Radius.circular(20),
-                        top: Radius.circular(20),
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          "Sign In Page",
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  _buildHeader(),
+                  const SizedBox(height: 32),
 
-                  SizedBox(height: 20),
-
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                          "LIBRARY",
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            letterSpacing: 16,
-                            fontSize: 34,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-
-                        Text(
-                          "SCHOOL",
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            letterSpacing: 16,
-                            fontSize: 34,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-
-                        Text(
-                          "a place to borrow books",
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(height: 20),
-
-                  FieldInput(
+                  _buildTextField(
+                    label: "Email",
+                    icon: Icons.email_outlined,
                     controller: emailController,
-                    icon: Icons.email,
-                    labelText: "Email",
-                    hintText: "Input your email",
-                    nullField: "Email is required",
-                    formatError: "Invalid email format",
+                    validator: (val) => val == null || val.isEmpty
+                        ? "Email is required"
+                        : EmailValidation.validate(val),
                   ),
+                  const SizedBox(height: 16),
 
-                  SizedBox(height: 20),
-
-                  FieldInput(
-                    icon: Icons.password,
+                  _buildTextField(
+                    label: "Password",
+                    icon: Icons.lock_outline,
                     controller: passwordController,
-                    labelText: "Password",
-                    hintText: "Create a password",
-                    nullField: 'Password is required',
-                    formatError: 'Invalid password format',
+                    isObscure: true,
+                    validator: (val) => val == null || val.isEmpty
+                        ? "Password is required"
+                        : PasswordValidation.validate(val),
                   ),
 
-                  SizedBox(height: 20),
-
-                  SizedBox(
-                    width: double.infinity,
-                    child: CustomButton(
-                      text: "Login",
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: () {
                       },
+                      child: Text(
+                        "Forgot Password?",
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: const Color(0xFF4A5433),
+                        ),
+                      ),
                     ),
                   ),
 
-                  SizedBox(height: 10),
+                  const SizedBox(height: 24),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "You don't have account?",
-                        style: GoogleFonts.poppins(color: Colors.white),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF4A5433),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-
-                      SizedBox(width: 4),
-
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => RegisterPage(),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          "Sign Up",
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
+                      minimumSize: const Size.fromHeight(50),
+                      elevation: 3,
+                      shadowColor: Colors.black.withOpacity(0.2),
+                    ),
+                    onPressed: isLoading ? null : _handleLogin,
+                    child: isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : Text(
+                      "Login",
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
                       ),
-                    ],
+                    ),
                   ),
+
+                  const SizedBox(height: 20),
+                  _buildSignUpLink(),
                 ],
               ),
             ),
@@ -203,5 +156,98 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-}
 
+  Widget _buildHeader() {
+    return Column(
+      children: [
+        Text(
+          "LIBRARY SCHOOL",
+          style: GoogleFonts.poppins(
+            fontSize: 26,
+            fontWeight: FontWeight.bold,
+            color: const Color(0xFF4A5433),
+            letterSpacing: 1.5,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          "Welcome back!",
+          style: GoogleFonts.poppins(
+            fontSize: 16,
+            color: Colors.grey.shade600,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTextField({
+    required String label,
+    required IconData icon,
+    required TextEditingController controller,
+    required String? Function(String?) validator,
+    bool isObscure = false,
+  }) {
+    return TextFormField(
+      controller: controller,
+      obscureText: isObscure,
+      validator: validator,
+      style: GoogleFonts.poppins(),
+      decoration: InputDecoration(
+        prefixIcon: Icon(icon, color: const Color(0xFF4A5433)),
+        labelText: label,
+        labelStyle: GoogleFonts.poppins(),
+        filled: true,
+        fillColor: Colors.white,
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Color(0xFF4A5433), width: 1.2),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.redAccent, width: 1.2),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.red, width: 1.5),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        errorStyle: GoogleFonts.poppins(
+          color: Colors.red[700],
+          fontSize: 12,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSignUpLink() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "Don't have an account?",
+          style: GoogleFonts.poppins(color: Colors.grey.shade600),
+        ),
+        const SizedBox(width: 4),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => RegisterPage()),
+            );
+          },
+          child: Text(
+            "Sign Up",
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFF4A5433),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:libraryschool_aplication/core/constants/const_colors.dart';
+import 'package:libraryschool_aplication/logic/authentication/register_logic.dart';
 import 'package:libraryschool_aplication/main.dart';
-import 'package:libraryschool_aplication/widgets/custom_button.dart';
-import 'package:libraryschool_aplication/widgets/custom_field.dart';
-
-import '../../helpers/validation/email_validation.dart';
-import '../../helpers/validation/password_validation.dart';
-import '../../logic/authentication/register_logic.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -26,335 +19,213 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFF7F8571), Color(0xFF4A5433)],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Center(
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F7FA),
+      body: SafeArea(
+        child: Center(
           child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Form(
               key: _formKey,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: Offset(0, 3),
-                        )
-                      ],
-                      color: Color(0xFFB5D966),
-                      borderRadius: BorderRadius.vertical(
-                        bottom: Radius.circular(20),
-                        top: Radius.circular(20),
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          "Sign Up Page",
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
+                  _buildHeader(),
+                  const SizedBox(height: 32),
+
+                  _buildTextField(
+                    label: "Username",
+                    icon: Icons.person_outline,
+                    controller: usernameController,
+                    validator: (val) => val == null || val.isEmpty
+                        ? "Username tidak boleh kosong"
+                        : null,
                   ),
-
-                  SizedBox(height: 20),
-
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                          "LIBRARY",
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            letterSpacing: 16,
-                            fontSize: 46,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-
-                        Text(
-                          "SCHOOL",
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            letterSpacing: 16,
-                            fontSize: 46,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-
-                        Text(
-                          "a place to borrow books",
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(height: 20),
-
-                  FieldInput(controller: usernameController, icon: Icons.person, labelText: "Username", hintText: "Create a username", nullField: "Username is required"),
-
-                  SizedBox(height: 10),
+                  const SizedBox(height: 16),
 
                   Row(
-                    children: <Widget>[
+                    children: [
                       Expanded(
                         flex: 2,
-                        child: Container(
-                          margin: EdgeInsets.only(right: 8),
-                          decoration: BoxDecoration(
-                            color: Color(0xFFAEBD9D),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.3),
-                                spreadRadius: 2,
-                                blurRadius: 5,
-                                offset: Offset(0, 3),
-                              ),
-                            ],
-                          ),
-                          child: TextFormField(
-                            controller: emailController,
-                            decoration: InputDecoration(
-                              hintText: "Input your email",
-                              hintStyle: TextStyle(
-                                color: Colors.black54,
-                                fontSize: 16,
-                              ),
-                              labelText: "Email",
-                              labelStyle: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 16,
-                              ),
-                              filled: true,
-                              fillColor: Color(0xFFCBD6BE),
-                              prefixIcon: Icon(Icons.email),
-                              contentPadding: EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 14,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none,
-                              ),
-                              errorStyle: TextStyle(
-                                fontSize: 12,
-                                height: 2,
-                                color: Colors.white,
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Email is required';
-                              }
-                              if (!isValidEmail(value)) {
-                                return 'Invalid email format';
-                              }
-                              return null;
-                            },
-                          ),
+                        child: _buildTextField(
+                          label: "Email",
+                          icon: Icons.email_outlined,
+                          controller: emailController,
+                          validator: EmailValidation.validate
                         ),
                       ),
+                      const SizedBox(width: 12),
                       Expanded(
                         flex: 1,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.3),
-                                spreadRadius: 2,
-                                blurRadius: 5,
-                                offset: Offset(0, 3),
-                              ),
-                            ],
-                          ),
-                          child: TextFormField(
-                            controller: otpController,
-                            decoration: InputDecoration(
-                              hintText: "Input OTP",
-                              hintStyle: TextStyle(
-                                color: Colors.black54,
-                                fontSize: 16,
-                              ),
-                              labelText: "OTP",
-                              labelStyle: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 16,
-                              ),
-                              filled: true,
-                              fillColor: Color(0xFFCBD6BE),
-                              prefixIcon: Icon(Icons.lock),
-                              contentPadding: EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 14,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
-                          ),
+                        child: _buildTextField(
+                          label: "OTP",
+                          icon: Icons.lock_outline,
+                          controller: otpController,
+                          validator: (val) => val == null || val.isEmpty
+                              ? "OTP wajib diisi"
+                              : null,
                         ),
                       ),
                     ],
                   ),
 
-                  SizedBox(height: 10),
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: () {
+                      },
+                      child: Text(
+                        "Send verification code",
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: const Color(0xFF4A5433),
+                        ),
+                      ),
+                    ),
+                  ),
 
-                  GestureDetector(
-                    onTap: () {},
+                  const SizedBox(height: 16),
+
+                  _buildTextField(
+                    label: "Password",
+                    icon: Icons.lock_outline,
+                    controller: passController,
+                    isObscure: true,
+                    validator: PasswordValidation.validate,
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF4A5433),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      minimumSize: const Size.fromHeight(50),
+                    ),
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        RegisterLogic.submit(
+                          username: usernameController.text,
+                          email: emailController.text,
+                          password: passController.text,
+                        );
+                      }
+                    },
                     child: Text(
-                      "Send code otp",
+                      "Register",
                       style: GoogleFonts.poppins(
-                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
                         fontSize: 16,
-                        fontWeight: FontWeight.normal,
                       ),
                     ),
                   ),
 
-                  SizedBox(height: 10),
-
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Color(0xFFAEBD9D),
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: TextFormField(
-                      obscureText: true,
-                      controller: passController,
-                      decoration: InputDecoration(
-                        hintText: "Create a password",
-                        hintStyle: TextStyle(
-                          color: Colors.black54,
-                          fontSize: 16,
-                        ),
-                        labelText: "Password",
-                        labelStyle: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 16,
-                        ),
-                        filled: true,
-                        fillColor: Color(0xFFCBD6BE),
-                        prefixIcon: Icon(Icons.password),
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 14,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-
-                        errorStyle: TextStyle(
-                          fontSize: 12,
-                          height: 2,
-                          color: Colors.white,
-                        ),
-                      ),
-
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Password is required';
-                        }
-                        if (!isValidPassword(value)) {
-                          return 'Invalid password format';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-
-                  SizedBox(height: 20),
-
-                  SizedBox(
-                    width: double.infinity,
-                    child: CustomButton(
-                      text: "Register",
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          var status = RegisterLogic.submit(
-                            username: usernameController.text,
-                            email: emailController.text,
-                            password: passController.text,
-                          );
-                        }
-                      },
-                    ),
-                  ),
-
-                  SizedBox(height: 10),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "You have account?",
-                        style: GoogleFonts.poppins(color: Colors.white),
-                      ),
-
-                      SizedBox(width: 4),
-
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LoginPage(),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          "Sign In",
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  const SizedBox(height: 20),
+                  _buildSignInLink(),
                 ],
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Column(
+      children: [
+        Text(
+          "LIBRARY SCHOOL",
+          style: GoogleFonts.poppins(
+            fontSize: 26,
+            fontWeight: FontWeight.bold,
+            color: const Color(0xFF4A5433),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          "Create your account",
+          style: GoogleFonts.poppins(
+            fontSize: 16,
+            color: Colors.grey.shade600,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTextField({
+    required String label,
+    required IconData icon,
+    required TextEditingController controller,
+    required String? Function(String?) validator,
+    bool isObscure = false,
+  }) {
+    return TextFormField(
+      controller: controller,
+      obscureText: isObscure,
+      validator: validator,
+      style: GoogleFonts.poppins(),
+      decoration: InputDecoration(
+        prefixIcon: Icon(icon, color: const Color(0xFF4A5433)),
+        labelText: label,
+        labelStyle: GoogleFonts.poppins(),
+        errorStyle: GoogleFonts.poppins(
+          color: Colors.red.shade700,
+          fontSize: 12,
+        ),
+        filled: true,
+        fillColor: Colors.white,
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Color(0xFF4A5433), width: 1.2),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red.shade700, width: 1.2),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red.shade700, width: 1.2),
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSignInLink() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "Already have an account?",
+          style: GoogleFonts.poppins(color: Colors.grey.shade600),
+        ),
+        const SizedBox(width: 4),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => LoginPage()),
+            );
+          },
+          child: Text(
+            "Sign In",
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFF4A5433),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
