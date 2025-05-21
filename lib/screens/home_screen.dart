@@ -222,7 +222,7 @@ class HomePage extends StatelessWidget {
 
   Widget _buildBottomNavBar(BuildContext context) {
     return Container(
-      height: 80,
+      height: MediaQuery.of(context).size.height * 0.10,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),

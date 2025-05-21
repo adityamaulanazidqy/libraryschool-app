@@ -471,7 +471,7 @@ class _SettingPageState extends State<SettingPage> {
 
   Widget _buildBottomNavBar(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.08,
+      height: MediaQuery.of(context).size.height * 0.10,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20.0)),
