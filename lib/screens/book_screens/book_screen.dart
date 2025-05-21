@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:libraryschool_aplication/screens/book_screens/book_detail_screen.dart';
+import 'package:libraryschool_aplication/widgets/app_bar.dart';
 import 'package:libraryschool_aplication/widgets/custom_field.dart';
 
 class BookListPage extends StatefulWidget {
@@ -61,7 +63,7 @@ class _BookListPageState extends State<BookListPage> {
         child: SafeArea(
           child: Column(
             children: [
-              _buildAppBar(),
+              BuildAppBar(titlePage: "Book Collection",),
               _buildUserGreeting(),
               _buildHeroBanner(),
               _buildCategoryFilter(),
@@ -69,55 +71,6 @@ class _BookListPageState extends State<BookListPage> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildAppBar() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: Container(
-              padding: const EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              child: const Icon(
-                FontAwesomeIcons.angleLeft,
-                size: 24,
-                color: Color(0xFF4A5433),
-              ),
-            ),
-          ),
-          Text(
-            "Book Collection",
-            style: GoogleFonts.poppins(
-              color: const Color(0xFF4A5433),
-              fontSize: 22,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: Container(
-              padding: const EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              child: const Icon(
-                Icons.settings_outlined,
-                size: 24,
-                color: Color(0xFF4A5433),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -148,10 +101,9 @@ class _BookListPageState extends State<BookListPage> {
               ),
             ],
           ),
-          // Search and notification icons
+
           Row(
             children: [
-              // Search button
               IconButton(
                 onPressed: () {},
                 icon: Container(
@@ -335,9 +287,10 @@ class _BookListPageState extends State<BookListPage> {
   Widget _buildBookCard(Map<String, dynamic> book) {
     return GestureDetector(
       onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => BookDetail(bookID: book["title"],)));
       },
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 4.0),
+        margin: EdgeInsets.symmetric(vertical: 8.0),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16.0),
@@ -351,6 +304,7 @@ class _BookListPageState extends State<BookListPage> {
           ],
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
@@ -393,7 +347,7 @@ class _BookListPageState extends State<BookListPage> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 48),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
