@@ -16,7 +16,6 @@ class _BookListPageState extends State<BookListPage> {
   final List<String> categories = ['All', 'Mystery', 'Fiction', 'Sci-Fi', 'History'];
   String selectedCategory = 'All';
 
-  // Sample book data
   final List<Map<String, dynamic>> books = [
     {
       'title': 'The Silent Patient',
@@ -74,14 +73,12 @@ class _BookListPageState extends State<BookListPage> {
     );
   }
 
-  /// Builds the custom app bar with back button and page title
   Widget _buildAppBar() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Back button with custom styling
           IconButton(
             onPressed: () => Navigator.pop(context),
             icon: Container(
@@ -97,7 +94,6 @@ class _BookListPageState extends State<BookListPage> {
               ),
             ),
           ),
-          // Page title
           Text(
             "Book Collection",
             style: GoogleFonts.poppins(
@@ -106,7 +102,6 @@ class _BookListPageState extends State<BookListPage> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          // Settings button
           IconButton(
             onPressed: () {},
             icon: Container(
@@ -127,14 +122,12 @@ class _BookListPageState extends State<BookListPage> {
     );
   }
 
-  /// Builds the user greeting and search section
   Widget _buildUserGreeting() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Personalized greeting
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -174,7 +167,6 @@ class _BookListPageState extends State<BookListPage> {
                   ),
                 ),
               ),
-              // Notification button with badge
               Stack(
                 children: [
                   IconButton(
@@ -219,7 +211,6 @@ class _BookListPageState extends State<BookListPage> {
     );
   }
 
-  /// Builds the hero banner at the top of the content
   Widget _buildHeroBanner() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -271,7 +262,6 @@ class _BookListPageState extends State<BookListPage> {
     );
   }
 
-  /// Builds the horizontal category filter chips
   Widget _buildCategoryFilter() {
     return SizedBox(
       height: 60,
@@ -317,9 +307,7 @@ class _BookListPageState extends State<BookListPage> {
     );
   }
 
-  /// Builds the main book list based on selected category
   Widget _buildBookList() {
-    // Filter books based on selected category
     final filteredBooks = selectedCategory == 'All'
         ? books
         : books.where((book) => book['category'] == selectedCategory).toList();
@@ -330,7 +318,7 @@ class _BookListPageState extends State<BookListPage> {
         child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-            childAspectRatio: 0.7,
+            childAspectRatio: 0.6,
             crossAxisSpacing: 16.0,
             mainAxisSpacing: 16.0,
           ),
@@ -344,13 +332,12 @@ class _BookListPageState extends State<BookListPage> {
     );
   }
 
-  /// Builds an individual book card
   Widget _buildBookCard(Map<String, dynamic> book) {
     return GestureDetector(
       onTap: () {
-        // Navigate to book details page
       },
       child: Container(
+        margin: EdgeInsets.symmetric(vertical: 4.0),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16.0),
@@ -366,7 +353,6 @@ class _BookListPageState extends State<BookListPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Book cover image
             ClipRRect(
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(16.0),
@@ -383,13 +369,11 @@ class _BookListPageState extends State<BookListPage> {
                 ),
               ),
             ),
-            // Book details
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Book title
                   Text(
                     book['title'],
                     style: GoogleFonts.poppins(
@@ -400,7 +384,6 @@ class _BookListPageState extends State<BookListPage> {
                     maxLines: 1,
                   ),
                   const SizedBox(height: 4),
-                  // Book author
                   Text(
                     book['author'],
                     style: GoogleFonts.poppins(
@@ -411,11 +394,9 @@ class _BookListPageState extends State<BookListPage> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 8),
-                  // Rating and category
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // Rating
                       Row(
                         children: [
                           const Icon(
@@ -434,7 +415,6 @@ class _BookListPageState extends State<BookListPage> {
                           ),
                         ],
                       ),
-                      // Category badge
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 8.0,

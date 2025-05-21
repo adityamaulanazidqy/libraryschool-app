@@ -35,6 +35,9 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -114,8 +117,8 @@ class _SettingPageState extends State<SettingPage> {
       child: Column(
         children: [
           Container(
-            height: 150,
-            width: 150,
+            height: MediaQuery.of(context).size.width * 0.35,
+            width: MediaQuery.of(context).size.width * 0.35,
             decoration: BoxDecoration(
               color: Colors.white,
               shape: BoxShape.circle,
@@ -168,15 +171,29 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   Widget _buildStatsSection() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buildStatItem("12", "Books read"),
-          _buildStatItem("5", "Sanctions"),
-        ],
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        bool isSmallScreen = constraints.maxWidth < 300;
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 24.0),
+          child: isSmallScreen
+              ? Column(
+            children: [
+              _buildStatItem("12", "Books read"),
+              SizedBox(height: 16),
+              _buildStatItem("5", "Sanctions"),
+            ],
+          )
+              : Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildStatItem("12", "Books read"),
+              _buildStatItem("5", "Sanctions"),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -221,48 +238,144 @@ class _SettingPageState extends State<SettingPage> {
 
   Widget _buildFavoriteBooksSection() {
     return Expanded(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Row(
-              children: [
-                const Expanded(
-                  child: Divider(
-                    color: Color(0xFFCBD6BE),
-                    thickness: 1,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(
-                    "Favorite Books",
-                    style: GoogleFonts.poppins(
-                      color: const Color(0xFF4A5433),
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          bool isSmallScreen = constraints.maxWidth < 400;
+
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Row(
+                  children: [
+                    const Expanded(
+                      child: Divider(
+                        color: Color(0xFFCBD6BE),
+                        thickness: 1,
+                      ),
                     ),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Text(
+                        "Favorite Books",
+                        style: GoogleFonts.poppins(
+                          color: const Color(0xFF4A5433),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const Expanded(
+                      child: Divider(
+                        color: Color(0xFFCBD6BE),
+                        thickness: 1,
+                      ),
+                    ),
+                  ],
                 ),
-                const Expanded(
-                  child: Divider(
-                    color: Color(0xFFCBD6BE),
-                    thickness: 1,
-                  ),
+              ),
+              const SizedBox(height: 16),
+              // Horizontal book list
+              Expanded(
+                child: isSmallScreen
+                    ? ListView.builder(
+                  itemCount: favoriteBooks.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: _buildVerticalBookCard(favoriteBooks[index]),
+                    );
+                  },
+                )
+                    : ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: favoriteBooks.length,
+                  itemBuilder: (context, index) {
+                    return _buildBookCard(favoriteBooks[index]);
+                  },
                 ),
-              ],
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildVerticalBookCard(Map<String, String> book) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.horizontal(left: Radius.circular(16.0)),
+            child: Image.network(
+              book['image']!,
+              width: 100,
+              height: MediaQuery.of(context).size.height * 0.2,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                color: const Color(0xFFF5F7FA),
+                height: 180,
+                child: const Icon(Icons.book, size: 50, color: Color(0xFFCBD6BE)),
+              ),
             ),
           ),
-          const SizedBox(height: 16),
-          // Horizontal book list
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              scrollDirection: Axis.horizontal,
-              itemCount: favoriteBooks.length,
-              itemBuilder: (context, index) {
-                return _buildBookCard(favoriteBooks[index]);
-              },
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    book['title']!,
+                    style: GoogleFonts.poppins(
+                      color: const Color(0xFF4A5433),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'by ${book['author']!}',
+                    style: GoogleFonts.poppins(
+                      color: Colors.grey.shade600,
+                      fontSize: 14,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Icon(Icons.star, color: Colors.amber, size: 16),
+                      const SizedBox(width: 4),
+                      Text(
+                        book['rating']!,
+                        style: GoogleFonts.poppins(
+                          color: const Color(0xFF4A5433),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -276,7 +389,7 @@ class _SettingPageState extends State<SettingPage> {
         // Navigate to book details
       },
       child: Container(
-        width: 180,
+        width: MediaQuery.of(context).size.width * 0.45,
         margin: const EdgeInsets.only(right: 16.0),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -358,7 +471,7 @@ class _SettingPageState extends State<SettingPage> {
 
   Widget _buildBottomNavBar(BuildContext context) {
     return Container(
-      height: 80,
+      height: MediaQuery.of(context).size.height * 0.08,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20.0)),

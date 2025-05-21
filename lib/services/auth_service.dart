@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
@@ -15,9 +16,7 @@ class AuthService {
     try {
       final response = await http.post(
         AuthEndpoints.register,
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'username': username,
           'email': email,
@@ -30,7 +29,9 @@ class AuthService {
         debugPrint('Register Success: ${data['message']}');
       } else {
         final error = jsonDecode(response.body);
-        debugPrint('Register Error ${response.statusCode}: ${error['message'] ?? 'Unknown error'}');
+        debugPrint(
+          'Register Error ${response.statusCode}: ${error['message'] ?? 'Unknown error'}',
+        );
       }
     } catch (e) {
       debugPrint('Exception during register: $e');
@@ -45,13 +46,8 @@ class AuthService {
     try {
       final response = await http.post(
         AuthEndpoints.login,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'email': email,
-          'password': password,
-        }),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'email': email, 'password': password}),
       );
 
       if (response.statusCode == 200) {
@@ -60,12 +56,17 @@ class AuthService {
         return true;
       } else {
         final error = jsonDecode(response.body);
-        debugPrint('Login Error ${response.statusCode}: ${error['message'] ?? 'Unknown error'}');
+        debugPrint(
+          'Login Error ${response.statusCode}: ${error['message'] ?? 'Unknown error'}',
+        );
         return false;
       }
+    } on TimeoutException catch (e) {
+      debugPrint('Login request timed out: $e');
+      return false;
     } catch (e) {
       debugPrint('Exception during login: $e');
-      rethrow;
+      return false;
     }
   }
 }
