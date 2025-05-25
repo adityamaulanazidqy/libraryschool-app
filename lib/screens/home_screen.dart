@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:libraryschool_aplication/screens/book_screens/book_borrowing_screen.dart';
 import 'package:libraryschool_aplication/screens/book_screens/book_screen.dart';
 import 'package:libraryschool_aplication/screens/book_screens/setting_screen.dart';
 
@@ -58,7 +59,9 @@ class HomePage extends StatelessWidget {
               child: Image.network(
                 'https://i.pinimg.com/474x/6c/70/8a/6c708a78bfe268ed1e9af5720f952cd2.jpg',
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => const Icon(Icons.person, color: Color(0xFF4A5433)),
+                errorBuilder:
+                    (context, error, stackTrace) =>
+                        const Icon(Icons.person, color: Color(0xFF4A5433)),
               ),
             ),
           ),
@@ -144,7 +147,12 @@ class HomePage extends StatelessWidget {
               icon: FontAwesomeIcons.bookBookmark,
               title: 'My Books',
               color: const Color(0xFF7F8571),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => BookBorrowingPage()),
+                );
+              },
             ),
             _buildMenuCard(
               icon: FontAwesomeIcons.clockRotateLeft,
@@ -199,11 +207,7 @@ class HomePage extends StatelessWidget {
                 color: color.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                icon,
-                size: 28,
-                color: color,
-              ),
+              child: Icon(icon, size: 28, color: color),
             ),
             const SizedBox(height: 12),
             Text(
@@ -246,7 +250,12 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildNavItem(IconData icon, String label, BuildContext context, {bool isActive = false}) {
+  Widget _buildNavItem(
+    IconData icon,
+    String label,
+    BuildContext context, {
+    bool isActive = false,
+  }) {
     return GestureDetector(
       onTap: () {
         if (label == "Profile") {
@@ -255,7 +264,10 @@ class HomePage extends StatelessWidget {
             MaterialPageRoute(builder: (context) => const SettingPage()),
           );
         } else if (label == "Books") {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => BookListPage()));
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => BookListPage()),
+          );
         }
       },
       child: Column(

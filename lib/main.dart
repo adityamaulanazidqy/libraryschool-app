@@ -38,34 +38,10 @@ class _LoginPageState extends State<LoginPage> {
   bool isLoading = false;
 
   Future<void> _handleLogin() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() => isLoading = true);
-
-      bool result = await LoginLogic.submit(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-
-      setState(() => isLoading = false);
-
-      if (result) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Login failed! Incorrect email or password.'),
-            backgroundColor: Colors.red[800],
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        );
-      }
-    }
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => HomePage()),
+    );
   }
 
   @override
